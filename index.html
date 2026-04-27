@@ -4,18 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- SEO -->
-  <title>AI Coaching Dashboard | Student Analytics</title>
-  <meta name="description" content="AI-powered student analytics dashboard to track performance, risk, and predictions.">
+  <title>AI Coaching Dashboard</title>
 
-  <!-- CSS -->
   <link rel="stylesheet" href="style.css">
 
-  <!-- Chart.js (IMPORTANT) -->
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body onload="LoadDashboard()">
+<body onload="loadDashboard()">
 
   <!-- HEADER -->
   <header class="header">
@@ -46,22 +43,15 @@
     </div>
   </div>
 
-  <!-- ACTION BUTTON -->
-  <div class="actions">
-    <button onclick="loadDashboard()" class="btn">
-      🚀 Load AI Insights
-    </button>
-  </div>
-
   <!-- CHARTS -->
   <section class="charts">
     <div class="chart-box">
-      <h3>📊 Subject Performance</h3>
+      <h3>📊 Student Scores</h3>
       <canvas id="barChart"></canvas>
     </div>
 
     <div class="chart-box">
-      <h3>📈 Student Progress</h3>
+      <h3>📈 Score Trend</h3>
       <canvas id="lineChart"></canvas>
     </div>
   </section>
@@ -82,17 +72,15 @@
     </table>
   </section>
 
-  <!-- CTA (IMPORTANT FOR CLIENT FEEL) -->
+  <!-- CTA -->
   <section class="cta">
     <h2>Want this system for your institute?</h2>
     <p>Get AI-powered insights for your students</p>
-    <button class="btn">Contact / Demo</button>
+    <button class="btn" onclick="alert('Coming soon')">Contact / Demo</button>
   </section>
 
   <!-- SCRIPT -->
   <script src="script.js"></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </body>
 </html>
