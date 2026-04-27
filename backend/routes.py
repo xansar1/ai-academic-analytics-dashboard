@@ -29,16 +29,37 @@ def get_kpis():
 @router.get("/students")
 def get_students():
     import pandas as pd
+    import os
 
-    df = pd.read_csv("data/students.csv")
+    file_path = os.path.join("data", "students.csv")
 
-    students = []
+    if not os.path.exists(file_path):
+        return []
 
-    for _, row in df.iterrows():
-        students.append({
-            "name": row["STUDENT_NAME"],
-            "score": row["TOTAL_SCORE"],
-            "risk": row.get("AI_DROPOUT_RISK", 0)
-        })
+    df = pd.read_csv(file_path)
 
-    return students
+    # Ensure TOTAL_SCORE exists
+    if "TOTAL_SCORE" not in df.columns:
+        numeric_cols = df.select_dtypes(include="number").columns
+        df["TOTAL_SCORE"] = df[numeric_cols].sum(axis=1)
+
+    # Risk conversion
+    def get_risk(val):
+        if val >= 0.7:
+            return "High"
+        elif val >= 0.4:
+            return "Medium"
+        return "Low"
+
+    if "AI_DROPOUT_RISK" in df.columns:
+        df["RISK_LABEL"] = df["AI_DROPOUT_RISK"].apply(get_risk)
+    else:
+        df["RISK_LABEL"] = "Low"
+
+    students = df[["STUDENT_NAME", "TOTAL_SCORE", "RISK_LABEL"]].rename(columns={
+        "STUDENT_NAME": "name",
+        "TOTAL_SCORE": "score",
+        "RISK_LABEL": "risk"
+    })
+
+    return students.to_dict(orient="records")
