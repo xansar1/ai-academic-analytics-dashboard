@@ -25,3 +25,20 @@ def get_kpis():
         "top_score": 99,
         "at_risk": 86
     }
+
+@router.get("/students")
+def get_students():
+    import pandas as pd
+
+    df = pd.read_csv("data/students.csv")
+
+    students = []
+
+    for _, row in df.iterrows():
+        students.append({
+            "name": row["STUDENT_NAME"],
+            "score": row["TOTAL_SCORE"],
+            "risk": row.get("AI_DROPOUT_RISK", 0)
+        })
+
+    return students
