@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 # 🔥 safer import (ensure structure correct)
-from routes import router   # if same folder
+from backend.routes import router   # if same folder
 # from backend.routes import router  # use this ONLY if folder structure requires
 
 app = FastAPI(
