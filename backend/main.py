@@ -9,10 +9,14 @@ app = FastAPI(
     description="AI-powered student analytics backend"
 )
 
-# CORS
+# ✅ CORS FIX (IMPORTANT)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "https://xansar1.github.io",  # 👈 your frontend
+        "http://localhost:3000",      # optional (for testing)
+        "http://127.0.0.1:5500"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
