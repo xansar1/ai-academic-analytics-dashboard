@@ -20,6 +20,33 @@ async function loadDashboard() {
   }
 }
 
+async function uploadCSV() {
+  const fileInput = document.getElementById("fileInput");
+  const file = fileInput.files[0];
+
+  if (!file) {
+    alert("Please select a file");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    await fetch("https://ai-academic-backend.onrender.com/upload", {
+      method: "POST",
+      body: formData
+    });
+
+    alert("Upload successful!");
+    loadDashboard(); // refresh data
+
+  } catch (err) {
+    console.error(err);
+    alert("Upload failed");
+  }
+}
+
 async function loadStudents() {
   try {
     const res = await fetch(`${API_BASE}/students`);
