@@ -1,61 +1,46 @@
-const API_BASE = "https://ai-academic-backend.onrender.com";
+const API = "https://ai-academic-backend.onrender.com";
 
+// =====================
+// LOAD DASHBOARD
+// =====================
 async function loadDashboard() {
   try {
-    // KPI fetch
-    const res = await fetch(`${API_BASE}/analytics/kpis`);
-    const data = await res.json();
+    // KPIs
+    const res = await fetch(`${API}/analytics/kpis`);
+    const kpi = await res.json();
 
-    document.getElementById("students").innerText = data.total_students;
-    document.getElementById("avg").innerText = data.avg_score;
-    document.getElementById("top").innerText = data.top_score;
-    document.getElementById("risk").innerText = data.at_risk;
+    document.getElementById("students").innerText = kpi.total_students;
+    document.getElementById("avg").innerText = kpi.avg_score;
+    document.getElementById("top").innerText = kpi.top_score;
+    document.getElementById("risk").innerText = kpi.at_risk;
 
-    // Load students
+    // Students + Charts
     loadStudents();
 
   } catch (err) {
     console.error(err);
-    alert("Backend connection failed");
+    alert("Backend connection error");
   }
 }
 
-async function uploadCSV() {
-  const fileInput = document.getElementById("fileInput");
-  const file = fileInput.files[0];
-
-  if (!file) {
-    alert("Please select a file");
-    return;
-  }
-
-  const formData = new FormData();
-  formData.append("file", file);
-
-  try {
-    await fetch("https://ai-academic-backend.onrender.com/upload", {
-      method: "POST",
-      body: formData
-    });
-
-    alert("Upload successful!");
-    loadDashboard(); // refresh data
-
-  } catch (err) {
-    console.error(err);
-    alert("Upload failed");
-  }
-}
-
+// =====================
+// LOAD STUDENTS
+// =====================
 async function loadStudents() {
   try {
-    const res = await fetch(`${API_BASE}/students`);
-    const students = await res.json();
+    const res = await fetch(`${API}/students`);
+    const data = await res.json();
 
     const table = document.querySelector("#studentTable tbody");
     table.innerHTML = "";
 
-    students.forEach(s => {
+    const names = [];
+    const scores = [];
+
+    data.forEach(s => {
+      names.push(s.name);
+      scores.push(s.score);
+
       const row = `
         <tr>
           <td>${s.name}</td>
@@ -66,36 +51,74 @@ async function loadStudents() {
       table.innerHTML += row;
     });
 
-    loadCharts(students);
+    loadCharts(names, scores);
 
   } catch (err) {
     console.error(err);
   }
 }
 
-function loadCharts(students) {
-  const names = students.map(s => s.name);
-  const scores = students.map(s => s.score);
+// =====================
+// CHARTS
+// =====================
+let barChart, lineChart;
 
-  new Chart(document.getElementById("barChart"), {
+function loadCharts(labels, data) {
+
+  if (barChart) barChart.destroy();
+  if (lineChart) lineChart.destroy();
+
+  barChart = new Chart(document.getElementById("barChart"), {
     type: "bar",
     data: {
-      labels: names,
+      labels: labels,
       datasets: [{
         label: "Scores",
-        data: scores
+        data: data
       }]
     }
   });
 
-  new Chart(document.getElementById("lineChart"), {
+  lineChart = new Chart(document.getElementById("lineChart"), {
     type: "line",
     data: {
-      labels: names,
+      labels: labels,
       datasets: [{
         label: "Trend",
-        data: scores
+        data: data
       }]
     }
   });
+}
+
+// =====================
+// CSV UPLOAD
+// =====================
+async function uploadCSV() {
+  const fileInput = document.getElementById("fileInput");
+  const file = fileInput.files[0];
+
+  if (!file) {
+    alert("Select a CSV file");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    await fetch(`${API}/upload`, {
+      method: "POST",
+      body: formData
+    });
+
+    alert("Upload successful!");
+
+    // refresh dashboard
+    loadDashboard();
+
+  } catch (err) {
+    console.error(err);
+    alert("Upload failed");
+  }
 }
