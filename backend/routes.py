@@ -11,26 +11,28 @@ DATA_PATH = os.path.join("data", "students.csv")
 # HELPER: SAFE SCORE CALCULATION
 # =========================
 def calculate_total_score(df):
-    # ✅ Only numeric columns
-    numeric_cols = df.select_dtypes(include="number").columns.tolist()
+    try:
+        score_cols = [
+            col for col in df.columns
+            if any(x in col.upper() for x in ["MARK", "SCORE", "TEST"])
+        ]
 
-    # ❌ Remove unwanted columns
-    exclude_cols = [
-        "PARENT_PHONE",
-        "PHONE",
-        "MOBILE",
-        "CONTACT",
-        "ADMISSION_NO"
-    ]
+        if not score_cols:
+            df["TOTAL_SCORE"] = 0
+            return df
 
-    score_cols = [col for col in numeric_cols if col not in exclude_cols]
+        # 🔥 convert safely to numeric
+        for col in score_cols:
+            df[col] = pd.to_numeric(df[col], errors="coerce")
 
-    if not score_cols:
+        df["TOTAL_SCORE"] = df[score_cols].sum(axis=1, skipna=True)
+
+        return df
+
+    except Exception as e:
+        print("ERROR IN SCORE CALC:", e)
         df["TOTAL_SCORE"] = 0
-    else:
-        df["TOTAL_SCORE"] = df[score_cols].sum(axis=1)
-
-    return df
+        return df
 
 
 # =========================
@@ -69,33 +71,37 @@ async def upload_csv(file: UploadFile = File(...)):
 # =========================
 @router.get("/analytics/kpis")
 def get_kpis():
-    if not os.path.exists(DATA_PATH):
+    try:
+        if not os.path.exists(DATA_PATH):
+            return {
+                "total_students": 0,
+                "avg_score": 0,
+                "top_score": 0,
+                "at_risk": 0
+            }
+
+        df = pd.read_csv(DATA_PATH)
+
+        if df.empty:
+            return {
+                "total_students": 0,
+                "avg_score": 0,
+                "top_score": 0,
+                "at_risk": 0
+            }
+
+        df = calculate_total_score(df)
+
         return {
-            "total_students": 0,
-            "avg_score": 0,
-            "top_score": 0,
+            "total_students": len(df),
+            "avg_score": round(df["TOTAL_SCORE"].mean(), 2),
+            "top_score": round(df["TOTAL_SCORE"].max(), 2),
             "at_risk": 0
         }
 
-    df = pd.read_csv(DATA_PATH)
-    df = calculate_total_score(df)
-
-    total_students = len(df)
-    avg_score = round(df["TOTAL_SCORE"].mean(), 2)
-    top_score = round(df["TOTAL_SCORE"].max(), 2)
-
-    if "AI_DROPOUT_RISK" in df.columns:
-        at_risk = len(df[df["AI_DROPOUT_RISK"] >= 0.7])
-    else:
-        at_risk = 0
-
-    return {
-        "total_students": total_students,
-        "avg_score": avg_score,
-        "top_score": top_score,
-        "at_risk": at_risk
-    }
-
+    except Exception as e:
+        return {"error": str(e)}
+        
 
 # =========================
 # STUDENTS
