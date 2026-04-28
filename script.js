@@ -1,4 +1,4 @@
-const API = "https://ai-academic-backend.onrender.com";
+const API = "https://ai-academic-backend.onrender.com/api";
 
 // =====================
 // LOAD DASHBOARD
