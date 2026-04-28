@@ -155,7 +155,7 @@ if "parent_user" not in st.session_state:
 if "main_df" not in st.session_state:
     st.session_state.main_df = None
     
-API_URL = "https://fantastic-space-garbanzo-97w9g7wgx77p3pvww-8000.app.github.dev"
+API_URL = "https://ai-academic-backend.onrender.com/api"
 
 # ---------------- SIDEBAR ----------------
 institution_type = "Coaching Centre"
