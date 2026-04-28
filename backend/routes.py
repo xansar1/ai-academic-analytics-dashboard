@@ -82,7 +82,7 @@ def get_kpis():
 
         df = pd.read_csv(DATA_PATH)
 
-        if df.empty:
+        if df is None or df.empty:
             return {
                 "total_students": 0,
                 "avg_score": 0,
@@ -92,15 +92,29 @@ def get_kpis():
 
         df = calculate_total_score(df)
 
+        # 🔥 CLEAN NUMBERS
+        df["TOTAL_SCORE"] = pd.to_numeric(df["TOTAL_SCORE"], errors="coerce").fillna(0)
+
+        total_students = len(df)
+        avg_score = float(df["TOTAL_SCORE"].mean())
+        top_score = float(df["TOTAL_SCORE"].max())
+
         return {
-            "total_students": len(df),
-            "avg_score": round(df["TOTAL_SCORE"].mean(), 2),
-            "top_score": round(df["TOTAL_SCORE"].max(), 2),
+            "total_students": total_students,
+            "avg_score": round(avg_score, 2),
+            "top_score": round(top_score, 2),
             "at_risk": 0
         }
 
     except Exception as e:
-        return {"error": str(e)}
+        print("KPI ERROR:", e)   # 🔥 IMPORTANT
+        return {
+            "total_students": 0,
+            "avg_score": 0,
+            "top_score": 0,
+            "at_risk": 0,
+            "error": str(e)
+        }
         
 
 # =========================
