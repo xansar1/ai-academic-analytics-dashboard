@@ -12,11 +12,11 @@
 
 <body onload="loadDashboard()">
 
-  <!-- HERO (IMPORTANT CHANGE) -->
+  <!-- HERO -->
   <header class="header">
     <h1>🚨 Identify Weak Students Before They Fail</h1>
     <p class="subtitle">
-      AI system that detects at-risk students and tells you exactly what to do
+      Detect at-risk students early + get exact actions to improve results
     </p>
   </header>
 
@@ -26,19 +26,19 @@
     <button onclick="uploadCSV()" class="btn">Upload Student Data</button>
   </div>
 
-  <!-- 🔥 ALERT SECTION (MOST IMPORTANT) -->
+  <!-- ALERT SECTION -->
   <section class="alert-box">
-    <h2>🚨 High Risk Students (Immediate Action Needed)</h2>
+    <h2>🚨 High Risk Students</h2>
     <ul id="riskList">
-      <li>Upload data to see risk insights</li>
+      <li>No data yet</li>
     </ul>
 
     <button class="danger-btn" onclick="sendAlerts()">
-      📲 Send Alert to Parents
+      📲 Send WhatsApp Alerts
     </button>
   </section>
 
-  <!-- KPI CARDS -->
+  <!-- KPI -->
   <div class="cards">
     <div class="card">
       <h3>Total Students</h3>
@@ -61,12 +61,10 @@
     </div>
   </div>
 
-  <!-- 🧠 AI INSIGHT -->
+  <!-- AI INSIGHT -->
   <section class="insight-box">
-    <h2>🧠 AI Insight</h2>
-    <p id="insightText">
-      Upload data to get AI recommendations
-    </p>
+    <h2>🧠 AI Recommendation</h2>
+    <p id="insightText">Upload data to see insights</p>
   </section>
 
   <!-- CHARTS -->
@@ -102,10 +100,8 @@
   <!-- CTA -->
   <section class="cta">
     <h2>🚀 Want This for Your Institute?</h2>
-    <p>Reduce student failures. Increase results. Save time.</p>
-    <button class="btn" onclick="alert('Book Demo Soon')">
-      📞 Get Demo (5 mins)
-    </button>
+    <p>Reduce failures. Improve results. Save teacher time.</p>
+    <button class="btn">📞 Book Demo</button>
   </section>
 
   <script src="script.js"></script>
