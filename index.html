@@ -4,26 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>AI Coaching Dashboard</title>
+  <title>AI Student Risk System</title>
 
   <link rel="stylesheet" href="style.css">
-
-  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body onload="loadDashboard()">
 
-  <!-- HEADER -->
+  <!-- HERO (IMPORTANT CHANGE) -->
   <header class="header">
-    <h1>📊 AI Coaching Dashboard</h1>
-    <p class="subtitle">Predict student performance before it drops</p>
+    <h1>🚨 Identify Weak Students Before They Fail</h1>
+    <p class="subtitle">
+      AI system that detects at-risk students and tells you exactly what to do
+    </p>
   </header>
 
+  <!-- UPLOAD -->
   <div class="upload-box">
     <input type="file" id="fileInput">
-    <button onclick="uploadCSV()" class="btn">Upload CSV</button>
+    <button onclick="uploadCSV()" class="btn">Upload Student Data</button>
   </div>
+
+  <!-- 🔥 ALERT SECTION (MOST IMPORTANT) -->
+  <section class="alert-box">
+    <h2>🚨 High Risk Students (Immediate Action Needed)</h2>
+    <ul id="riskList">
+      <li>Upload data to see risk insights</li>
+    </ul>
+
+    <button class="danger-btn" onclick="sendAlerts()">
+      📲 Send Alert to Parents
+    </button>
+  </section>
 
   <!-- KPI CARDS -->
   <div class="cards">
@@ -43,10 +56,18 @@
     </div>
 
     <div class="card danger">
-      <h3>At Risk</h3>
+      <h3>⚠️ At Risk</h3>
       <p id="risk">--</p>
     </div>
   </div>
+
+  <!-- 🧠 AI INSIGHT -->
+  <section class="insight-box">
+    <h2>🧠 AI Insight</h2>
+    <p id="insightText">
+      Upload data to get AI recommendations
+    </p>
+  </section>
 
   <!-- CHARTS -->
   <section class="charts">
@@ -71,6 +92,7 @@
           <th>Name</th>
           <th>Score</th>
           <th>Risk</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody></tbody>
@@ -79,12 +101,13 @@
 
   <!-- CTA -->
   <section class="cta">
-    <h2>Want this system for your institute?</h2>
-    <p>Get AI-powered insights for your students</p>
-    <button class="btn" onclick="alert('Coming soon')">Contact / Demo</button>
+    <h2>🚀 Want This for Your Institute?</h2>
+    <p>Reduce student failures. Increase results. Save time.</p>
+    <button class="btn" onclick="alert('Book Demo Soon')">
+      📞 Get Demo (5 mins)
+    </button>
   </section>
 
-  <!-- SCRIPT -->
   <script src="script.js"></script>
 
 </body>
