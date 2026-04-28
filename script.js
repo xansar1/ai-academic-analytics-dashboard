@@ -1,7 +1,7 @@
 const API = "https://ai-academic-backend.onrender.com/api";
 
 // =====================
-// LOADING HELPERS
+// LOADING
 // =====================
 function setLoading(state = true) {
   document.body.style.opacity = state ? "0.6" : "1";
@@ -15,7 +15,6 @@ async function loadDashboard() {
 
   try {
     const res = await fetch(`${API}/analytics/kpis`);
-
     if (!res.ok) throw new Error("API error");
 
     const kpi = await res.json();
@@ -29,47 +28,96 @@ async function loadDashboard() {
 
   } catch (err) {
     console.error(err);
-    alert("⚠️ Backend is waking up... try again in few seconds");
+    alert("⚠️ Backend is waking up... wait 10 sec and refresh");
   }
 
   setLoading(false);
 }
 
 // =====================
-// LOAD STUDENTS
+// LOAD STUDENTS + AI
 // =====================
 async function loadStudents() {
   try {
     const res = await fetch(`${API}/students`);
-
     if (!res.ok) throw new Error("Students API failed");
 
     const data = await res.json();
 
     const table = document.querySelector("#studentTable tbody");
+    const riskList = document.getElementById("riskList");
+    const insightText = document.getElementById("insightText");
+
     table.innerHTML = "";
+    riskList.innerHTML = "";
 
     if (!data.length) {
-      table.innerHTML = `<tr><td colspan="3">No data available</td></tr>`;
+      table.innerHTML = `<tr><td colspan="4">No data available</td></tr>`;
       return;
     }
 
     const names = [];
     const scores = [];
 
+    let highRisk = 0;
+    let lowScoreCount = 0;
+
     data.forEach(s => {
-      names.push(s.name || "N/A");
-      scores.push(s.score || 0);
+      const name = s.name || "N/A";
+      const score = s.score || 0;
+      const risk = s.risk || "Low";
+
+      names.push(name);
+      scores.push(score);
+
+      // 🔴 HIGH RISK LIST
+      if (risk === "High") {
+        highRisk++;
+        riskList.innerHTML += `<li>⚠️ ${name} needs immediate attention</li>`;
+      }
+
+      // 📉 LOW SCORE DETECTION
+      if (score < 50) lowScoreCount++;
+
+      // ACTION BUTTON
+      const actionBtn = `
+        <button onclick="alert('Call parent of ${name}')">
+          📞 Act
+        </button>
+      `;
 
       const row = `
         <tr>
-          <td>${s.name || "-"}</td>
-          <td>${s.score || 0}</td>
-          <td>${s.risk || "Low"}</td>
+          <td>${name}</td>
+          <td>${score}</td>
+          <td>${risk}</td>
+          <td>${actionBtn}</td>
         </tr>
       `;
+
       table.innerHTML += row;
     });
+
+    // =====================
+    // AI INSIGHT
+    // =====================
+    if (highRisk > 0) {
+      insightText.innerText =
+        `🚨 ${highRisk} students are at HIGH risk. Immediate parent contact recommended.`;
+    } else if (lowScoreCount > 0) {
+      insightText.innerText =
+        `📉 ${lowScoreCount} students scoring below 50. Conduct revision sessions.`;
+    } else {
+      insightText.innerText =
+        "✅ All students performing well. Maintain current strategy.";
+    }
+
+    // =====================
+    // EMPTY RISK STATE
+    // =====================
+    if (highRisk === 0) {
+      riskList.innerHTML = "<li>✅ No high-risk students</li>";
+    }
 
     loadCharts(names, scores);
 
@@ -146,4 +194,11 @@ async function uploadCSV() {
   }
 
   setLoading(false);
+}
+
+// =====================
+// SEND ALERT
+// =====================
+function sendAlerts() {
+  alert("📲 WhatsApp API connect cheythal automatic alert send aakum");
 }
