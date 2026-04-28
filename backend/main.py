@@ -1,9 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-# 🔥 safer import (ensure structure correct)
-from backend.routes import router   # if same folder
-# from backend.routes import router  # use this ONLY if folder structure requires
+# ✅ IMPORTANT: correct import (based on your structure)
+from backend.routes import router
 
 app = FastAPI(
     title="AI Coaching SaaS API",
@@ -16,7 +15,7 @@ app = FastAPI(
 # =========================
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # ⚠️ restrict in production
+    allow_origins=["*"],  # ⚠️ production il restrict cheyyanam
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
