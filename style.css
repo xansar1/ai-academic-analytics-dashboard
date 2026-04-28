@@ -9,7 +9,7 @@ body {
 /* ===== HEADER ===== */
 .header {
   text-align: center;
-  padding: 30px 20px;
+  padding: 40px 20px;
 }
 
 .header h1 {
@@ -17,14 +17,54 @@ body {
   margin-bottom: 5px;
 }
 
-.upload-box {
-  text-align: center;
-  margin-top;
-}
-
 .subtitle {
   color: #94a3b8;
   font-size: 14px;
+}
+
+/* ===== UPLOAD ===== */
+.upload-box {
+  text-align: center;
+  margin: 20px 0 30px;
+}
+
+/* ===== ALERT BOX (VERY IMPORTANT) ===== */
+.alert-box {
+  margin: 20px auto;
+  width: 85%;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: left;
+}
+
+.alert-box h2 {
+  color: #ef4444;
+  margin-bottom: 10px;
+}
+
+.alert-box ul {
+  padding-left: 20px;
+  margin-bottom: 15px;
+}
+
+.alert-box li {
+  margin-bottom: 6px;
+}
+
+.danger-btn {
+  padding: 10px 20px;
+  background: #ef4444;
+  border: none;
+  border-radius: 25px;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.danger-btn:hover {
+  transform: scale(1.05);
 }
 
 /* ===== CARDS ===== */
@@ -64,6 +104,22 @@ body {
   border-left: 4px solid #ef4444;
 }
 
+/* ===== AI INSIGHT ===== */
+.insight-box {
+  margin: 30px auto;
+  width: 85%;
+  background: rgba(168, 85, 247, 0.1);
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  padding: 20px;
+  border-radius: 16px;
+  text-align: left;
+}
+
+.insight-box h2 {
+  color: #c084fc;
+  margin-bottom: 10px;
+}
+
 /* ===== BUTTON ===== */
 .btn {
   padding: 12px 28px;
@@ -78,12 +134,6 @@ body {
 
 .btn:hover {
   transform: scale(1.05);
-}
-
-/* ===== ACTIONS ===== */
-.actions {
-  text-align: center;
-  margin: 30px 0;
 }
 
 /* ===== CHARTS ===== */
@@ -136,6 +186,16 @@ td {
 
 tr:hover {
   background: rgba(168,85,247,0.1);
+}
+
+/* ===== ACTION BUTTON IN TABLE ===== */
+table button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 20px;
+  background: #22c55e;
+  color: white;
+  cursor: pointer;
 }
 
 /* ===== CTA ===== */
