@@ -11,16 +11,25 @@ DATA_PATH = os.path.join("data", "students.csv")
 # HELPER: SAFE SCORE CALCULATION
 # =========================
 def calculate_total_score(df):
-    # Only include subject/score columns
-    score_cols = [
-        col for col in df.columns
-        if any(x in col.upper() for x in ["MARK", "SCORE", "TEST"])
+    # ✅ Only numeric columns
+    numeric_cols = df.select_dtypes(include="number").columns.tolist()
+
+    # ❌ Remove unwanted columns
+    exclude_cols = [
+        "PARENT_PHONE",
+        "PHONE",
+        "MOBILE",
+        "CONTACT",
+        "ADMISSION_NO"
     ]
 
-    if not score_cols:
-        return df.assign(TOTAL_SCORE=0)
+    score_cols = [col for col in numeric_cols if col not in exclude_cols]
 
-    df["TOTAL_SCORE"] = df[score_cols].sum(axis=1)
+    if not score_cols:
+        df["TOTAL_SCORE"] = 0
+    else:
+        df["TOTAL_SCORE"] = df[score_cols].sum(axis=1)
+
     return df
 
 
@@ -110,6 +119,10 @@ def get_students():
         df["risk"] = df["AI_DROPOUT_RISK"].apply(get_risk)
     else:
         df["risk"] = "Low"
+
+    # ✅ Safe fallback if column missing
+    if "STUDENT_NAME" not in df.columns:
+        df["STUDENT_NAME"] = "Student"
 
     students = df[["STUDENT_NAME", "TOTAL_SCORE", "risk"]].rename(columns={
         "STUDENT_NAME": "name",
