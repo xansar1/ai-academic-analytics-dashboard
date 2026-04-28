@@ -14,7 +14,7 @@ def calculate_total_score(df):
     try:
         score_cols = [
             col for col in df.columns
-            if any(x in col.upper() for x in ["MARK", "SCORE", "TEST"])
+            if any(x in col.upper() for x in ["MARK", "TEST"])
         ]
 
         if not score_cols:
@@ -80,9 +80,10 @@ def get_kpis():
                 "at_risk": 0
             }
 
-        df = pd.read_csv(DATA_PATH)
+        # 🔥 safer read
+        df = pd.read_csv(DATA_PATH, dtype=str)
 
-        if df is None or df.empty:
+        if df.empty:
             return {
                 "total_students": 0,
                 "avg_score": 0,
@@ -90,14 +91,20 @@ def get_kpis():
                 "at_risk": 0
             }
 
+        # 🔥 convert all numeric-like values
+        for col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors="ignore")
+
         df = calculate_total_score(df)
 
-        # 🔥 CLEAN NUMBERS
-        df["TOTAL_SCORE"] = pd.to_numeric(df["TOTAL_SCORE"], errors="coerce").fillna(0)
+        # 🔥 ensure numeric safety
+        df["TOTAL_SCORE"] = pd.to_numeric(
+            df["TOTAL_SCORE"], errors="coerce"
+        ).fillna(0)
 
-        total_students = len(df)
-        avg_score = float(df["TOTAL_SCORE"].mean())
-        top_score = float(df["TOTAL_SCORE"].max())
+        total_students = int(len(df))
+        avg_score = float(df["TOTAL_SCORE"].mean() or 0)
+        top_score = float(df["TOTAL_SCORE"].max() or 0)
 
         return {
             "total_students": total_students,
@@ -107,7 +114,7 @@ def get_kpis():
         }
 
     except Exception as e:
-        print("KPI ERROR:", e)   # 🔥 IMPORTANT
+        print("🔥 KPI ERROR:", e)
         return {
             "total_students": 0,
             "avg_score": 0,
