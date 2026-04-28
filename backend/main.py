@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-# ✅ IMPORTANT: correct import (based on your structure)
 from backend.routes import router
 
 app = FastAPI(
@@ -10,37 +9,22 @@ app = FastAPI(
     description="AI-powered student analytics backend"
 )
 
-# =========================
-# CORS (Frontend connect)
-# =========================
+# CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # ⚠️ production il restrict cheyyanam
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# =========================
-# ROUTES
-# =========================
+# Routes
 app.include_router(router, prefix="/api")
 
-
-# =========================
-# ROOT
-# =========================
+# Root
 @app.get("/")
 def home():
     return {
         "status": "running",
         "message": "AI Coaching SaaS API 🚀"
     }
-
-
-# =========================
-# HEALTH CHECK
-# =========================
-@app.get("/health")
-def health():
-    return {"status": "ok"}
